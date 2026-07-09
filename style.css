@@ -134,3 +134,10 @@ tr:hover {
 .operator-offline {
     background: #f5f5f5;
 }
+
+#lastUpdate {
+    text-align: right;
+    color: #336699;
+    font-size: 20px;
+    margin: 8px 0 15px 0;
+}

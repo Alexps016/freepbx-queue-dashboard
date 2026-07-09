@@ -4,7 +4,7 @@
 
 <meta charset="UTF-8">
 
-<title>FreePBX Queue Dashboard</title>
+<title>Airport Call-Centre</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -12,9 +12,11 @@
 
 <body>
 
-<h1>FreePBX Queue Dashboard</h1>
+<h1>Airport Call-Centre</h1>
 
 <div id="summary"></div>
+
+<div id="lastUpdate"></div>
 
 <h2>Операторы</h2>
 
@@ -24,7 +26,23 @@
            <th>Оператор</th>
            <th>Статус</th>
            <th>Ответил</th>
-           <th>Не ответил</th>
+           <th>Не поднял трубку</th>
+        </tr>
+    </thead>
+
+    <tbody></tbody>
+
+</table>
+
+<h2>Активные разговоры</h2>
+
+<table id="activeCalls">
+
+    <thead>
+        <tr>
+            <th>Оператор</th>
+            <th>Абонент</th>
+            <th>Длительность</th>
         </tr>
     </thead>
 

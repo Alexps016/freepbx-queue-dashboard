@@ -18,6 +18,11 @@ async function loadDashboard() {
     const response = await fetch('api.php');
     const data = await response.json();
 
+    document.getElementById("lastUpdate").textContent =
+    "Последнее обновление: " + new Date().toLocaleTimeString("ru-RU");
+
+
+
     // Общая статистика
  document.getElementById('summary').innerHTML = `
 
@@ -74,6 +79,36 @@ for (const ext in data.operators) {
 }
 
 document.querySelector("#operators tbody").innerHTML = operators;
+
+let activeCalls = "";
+
+if (data.active_calls.length === 0) {
+
+    activeCalls = `
+    <tr>
+        <td colspan="3" style="text-align:center;">
+            Нет активных разговоров
+        </td>
+    </tr>`;
+
+} else {
+
+    data.active_calls.forEach(call => {
+
+        activeCalls += `
+        <tr>
+            <td><b>${call.operator}</b></td>
+            <td>${call.caller}</td>
+            <td>${formatDuration(call.duration)}</td>
+        </tr>`;
+
+    });
+
+}
+
+document.querySelector("#activeCalls tbody").innerHTML = activeCalls;
+
+
 
     // Последние вызовы
     let calls = "";

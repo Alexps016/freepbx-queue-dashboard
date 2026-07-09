@@ -33,9 +33,7 @@ function getOperatorStatuses()
                     break;
 
                 case 'Unavailable':
-                    $color = 'gray';
-                    $text = '⚪ Не зарегистрирован';
-                    break;
+                    continue 2;
 
                 default:
                     $color = 'blue';
