@@ -18,3 +18,4 @@ $REFRESH = 5;
 
 // Последние вызовы
 $LAST_CALLS = 20;
+$MIN_RING_TIME = 3000;

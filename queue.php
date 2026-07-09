@@ -34,6 +34,8 @@ function getQueueData()
 
     $fp = fopen($QUEUE_LOG, "r");
 
+    $today = strtotime(date('Y-m-d 00:00:00'));
+
     while (($line = fgets($fp)) !== false) {
 
         $line = trim($line);
@@ -43,6 +45,12 @@ function getQueueData()
         }
 
         $p = explode('|', $line);
+
+        $eventTime = (int)$p[0];
+
+        if ($eventTime < $today) {
+        continue;
+        }
 
         if (count($p) < 5) {
             continue;
@@ -87,13 +95,16 @@ function getQueueData()
 
                 break;
 
-            case 'RINGNOANSWER':
+case 'RINGNOANSWER':
 
-                if (is_numeric($agent)) {
-                    $calls[$unique]['ringed'][$agent] = true;
-                }
+    $ringTime = isset($p[5]) ? (int)$p[5] : 0;
 
-                break;
+    // Игнорируем очень короткие вызовы
+    if ($ringTime >= 3000 && is_numeric($agent)) {
+        $calls[$unique]['ringed'][$agent] = true;
+    }
+
+    break;
 
             case 'CONNECT':
 
@@ -135,25 +146,27 @@ function getQueueData()
     fclose($fp);
 
     // Подсчет пропущенных оператором
-    foreach ($calls as $call) {
+foreach ($calls as $call) {
 
-        if (!$call['answered']) {
+    $alreadyCounted = [];
+
+    foreach ($call['ringed'] as $agent => $dummy) {
+
+        if ($agent == $call['answered_by']) {
             continue;
         }
 
-        foreach ($call['ringed'] as $agent => $dummy) {
-
-            if ($agent == $call['answered_by']) {
-                continue;
-            }
-
-            if (isset($result['operators'][$agent])) {
-                $result['operators'][$agent]['missed']++;
-            }
-
+        if (isset($alreadyCounted[$agent])) {
+            continue;
         }
 
+        if (isset($result['operators'][$agent])) {
+            $result['operators'][$agent]['missed']++;
+        }
+
+        $alreadyCounted[$agent] = true;
     }
+}
 
     // Последние вызовы
     uasort($calls, function ($a, $b) {
